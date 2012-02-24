@@ -3,11 +3,14 @@
 
 namespace lw{
     void GestureMgr::reset(){
-        _currGestureId = 1;
-        _gestures.clear();
+        _currGestureId = 0;
     }
     
 	void GestureMgr::main(){
+        if ( _currGestureId == 0 ){ //do reset
+            _currGestureId = 1;
+            _gestures.clear();
+        }
 		std::list<Gesture>::iterator git = _gestures.begin();
 		std::list<Gesture>::iterator gitEnd = _gestures.end();
 		for ( ; git != gitEnd; ){
