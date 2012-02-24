@@ -26,6 +26,7 @@ namespace lw{
 	class GestureMgr{
 	public:
 		GestureMgr():_currGestureId(1){}
+        void reset();
 		void main();
 		void onTouchEvent(const std::vector<lw::TouchEvent>& events);
 		void deleteGesture(float x, float y);

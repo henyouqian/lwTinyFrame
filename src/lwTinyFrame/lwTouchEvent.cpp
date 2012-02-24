@@ -2,6 +2,11 @@
 #include "lwTinyFrame/lwTouchEvent.h"
 
 namespace lw{
+    void GestureMgr::reset(){
+        _currGestureId = 1;
+        _gestures.clear();
+    }
+    
 	void GestureMgr::main(){
 		std::list<Gesture>::iterator git = _gestures.begin();
 		std::list<Gesture>::iterator gitEnd = _gestures.end();
