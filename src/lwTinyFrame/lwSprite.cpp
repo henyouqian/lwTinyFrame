@@ -224,7 +224,10 @@ namespace lw{
 				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			}else if ( bm == BLEND_ADD ){
 				glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
-			}
+			}else if ( bm == BLEND_MULTIPLY ){
+                glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+            }
+                
 		}
 		
 		glEnableClientState(GL_VERTEX_ARRAY);

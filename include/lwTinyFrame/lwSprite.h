@@ -76,6 +76,7 @@ namespace lw{
 			BLEND_NONE,
 			BLEND_OVERLAY,
 			BLEND_ADD,
+            BLEND_MULTIPLY,
 		};
 		static void flush(BlendMode bm = BLEND_OVERLAY);
 		const cml::Matrix44& getMatrix();

@@ -1065,6 +1065,9 @@
 /* Begin PBXProject section */
 		D07C1B5C1344E26F0029684B /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
 			buildConfigurationList = D07C1B5F1344E26F0029684B /* Build configuration list for PBXProject "lwTinyFrame" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -1152,7 +1155,7 @@
 		D07C1B6D1344E2700029684B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = armv6;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
@@ -1160,23 +1163,25 @@
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
+				VALID_ARCHS = armv6;
 			};
 			name = Debug;
 		};
 		D07C1B6E1344E2700029684B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = armv6;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
+				VALID_ARCHS = armv6;
 			};
 			name = Release;
 		};
@@ -1194,6 +1199,7 @@
 					HAVE_USLEEP,
 					HAVE_UNISTD_H,
 				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
 					include,
 					include/soil,
@@ -1218,6 +1224,7 @@
 					HAVE_USLEEP,
 					HAVE_UNISTD_H,
 				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
 					include,
 					include/soil,
@@ -1232,14 +1239,15 @@
 		D08E9599138BBDCB00068D11 /* Ad Hoc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = armv6;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
+				VALID_ARCHS = armv6;
 			};
 			name = "Ad Hoc";
 		};
@@ -1250,6 +1258,7 @@
 				DSTROOT = /tmp/lwTinyFrame.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = src/lwTinyFrame/stdafx.h;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
 					include,
 					include/soil,
