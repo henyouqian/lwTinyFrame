@@ -46,9 +46,15 @@ namespace lw{
 		void setVolume(float volume){
 			_volume = volume;
 		}
+        float getVolume(){
+            return _volume;
+        }
 		void setPitch(float pitch){
 			_pitch = pitch;
 		}
+        float getPitch(){
+            return _pitch;
+        }
 		void setSecOffset(float offset){
 			_secOffset = offset;
 		}
