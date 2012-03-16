@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "lwTinyFrame/lwTask.h"
+#include "lwTinyFrame/lwTouchEvent.h"
 
 namespace lw {
 
@@ -11,6 +12,7 @@ namespace lw {
 		TaskMap _tasks;
 		TaskList _allTasks;
 		PendingTasks _pendingTasks;
+        lw::GestureMgr _gestMgr;
 	};
 
 	namespace{
@@ -193,6 +195,9 @@ namespace lw {
 	}
 
 	void TaskMgr::onTouchEvent(std::vector<TouchEvent>& events){
+        _spData->_gestMgr.onTouchEvent(events);
+        const std::list<lw::Gesture>& gestures = _spData->_gestMgr.getGestures();
+        
 		TaskMap& tasks = _spData->_tasks;
 		TaskMap::iterator it = tasks.begin();
 		TaskMap::iterator end = tasks.end();
@@ -206,12 +211,22 @@ namespace lw {
 				pTask = *itl;
 				lwassert(pTask);
 				if ( pTask->_status == Task::STATUS_NORMAL && pTask->_isRunning ){
+                    std::list<lw::Gesture>::const_iterator itg = gestures.begin();
+                    std::list<lw::Gesture>::const_iterator itgEnd = gestures.end();
+                    for ( ;itg != itgEnd; ++itg ){
+                        if ( itg->updated ){
+                            pTask->vGesture(&(*itg));
+                        }
+                    }
+
 					if ( pTask->vOnTouchEvent(events) ){
+                        _spData->_gestMgr.main();
 						return;
 					}
 				}
 			}
 		}
+        _spData->_gestMgr.main();
 	}
 
 	Task::Task()

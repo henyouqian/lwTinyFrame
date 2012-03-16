@@ -4,6 +4,7 @@
 namespace lw {
 
 	struct TouchEvent;
+    class Gesture;
 
 	class Task
 	{
@@ -25,6 +26,7 @@ namespace lw {
 		virtual void vMain(float elapsed){};
 		virtual void vDraw(float elapsed){};
 		virtual bool vOnTouchEvent(std::vector<TouchEvent>& events){return false;}	//if return true, will not process the event further
+        virtual void vGesture(const lw::Gesture* pGst){};
 		virtual void vShow(bool b){};
 		virtual void vRun(bool b){};
 
