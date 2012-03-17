@@ -47,7 +47,7 @@ namespace lw {
 	}
 
 	bool TaskMgr::remove(Task& task){
-		if ( task._status != Task::STATUS_NORMAL ){
+		if ( task._status != Task::STATUS_RUNNING ){
 			lwerror(L"task._status != Task::STATUS_NORMAL, status=" << task._status);
 			return false;
 		}
@@ -168,7 +168,7 @@ namespace lw {
 						it = tasks.find(priority);
 					}
 					it->second.push_back(pTask);
-					pTask->_status = Task::STATUS_NORMAL;
+					pTask->_status = Task::STATUS_RUNNING;
 					pTask->vBegin();
 				}else if ( status == Task::STATUS_REMOVEING ){
 					if ( it == end ){
@@ -210,7 +210,7 @@ namespace lw {
 			for ( ; itl != endl; ++itl ){
 				pTask = *itl;
 				lwassert(pTask);
-				if ( pTask->_status == Task::STATUS_NORMAL && pTask->_isRunning ){
+				if ( pTask->_status == Task::STATUS_RUNNING ){
                     std::list<lw::Gesture>::const_iterator itg = gestures.begin();
                     std::list<lw::Gesture>::const_iterator itgEnd = gestures.end();
                     for ( ;itg != itgEnd; ++itg ){
@@ -256,7 +256,6 @@ namespace lw {
 
 	bool Task::start(int priority){
 		_isVisible = true;
-		_isRunning = true;
 		return TaskMgr::add(*this, priority);
 	}
 
@@ -264,19 +263,17 @@ namespace lw {
 		return TaskMgr::remove(*this);
 	}
 
-	void Task::run(bool b){
-		_isRunning = b;
-		vRun(b);
-	}
-
 	void Task::show(bool b){
 		_isVisible = b;
 		vShow(b);
 	}
+    
+    Task::Status Task::getStatus(){
+        return _status;
+    }
+    
 	void Task::main(float elapsed){
-		if ( _isRunning ){
-			vMain(elapsed);
-		}
+		vMain(elapsed);
 	}
 	void Task::draw(float elapsed){
 		if ( _isVisible ){
