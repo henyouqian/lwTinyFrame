@@ -114,7 +114,7 @@ namespace lw{
 	UIButton::UIButton()
 	:_pCallback(NULL), _isTracing(false), _isDown(false), _gesId(-1)
 	,_pFontUp(NULL), _pFontDown(NULL), _pFontDisable(NULL)
-	,_x(0), _y(0),_topExt(0), _bottomExt(0), _leftExt(0), _rightExt(0){
+	,_x(0), _y(0),_topExt(0), _bottomExt(0), _leftExt(0), _rightExt(0), _int(-1){
 
 	}
 
@@ -176,7 +176,7 @@ namespace lw{
 				_isDown = true;
 				_gesId = gesture.id;
 				if ( _pCallback ){
-					_pCallback->onButtonDown(this);
+					_pCallback->vOnDown(this);
 				}
 				g_gestrueMgr.deleteGesture(evt.x, evt.y);
 				return true;
@@ -190,7 +190,7 @@ namespace lw{
 					_isDown = false;
 					if ( isDown && _pCallback ){
 						_pCallback->vOnClick(this);
-						_pCallback->onButtonUp(this);
+						_pCallback->vOnUp(this);
 						return true;
 					}
 				}
@@ -203,7 +203,7 @@ namespace lw{
 						_isDown = true;
 				}else{
 					if ( _isDown && _pCallback ){
-						_pCallback->onButtonUp(this);
+						_pCallback->vOnUp(this);
 					}
 					_isDown = false;
 				}

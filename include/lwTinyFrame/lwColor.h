@@ -29,6 +29,7 @@ namespace lw{
 			b = (GLubyte)bb;
 			a = (GLubyte)aa;
 		}
+        void set(int v);
 		int getInt();
 		GLubyte r, g, b, a;
 	};

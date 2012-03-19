@@ -15,8 +15,8 @@ namespace lw{
 	class ButtonCallback{
 	public:
 		virtual ~ButtonCallback(){}
-		virtual void onButtonDown(lw::UIButton* pButton){}
-		virtual void onButtonUp(lw::UIButton* pButton){}
+		virtual void vOnDown(lw::UIButton* pButton){}
+		virtual void vOnUp(lw::UIButton* pButton){}
 		virtual void vOnClick(lw::UIButton* pButton){}
 	};
 
@@ -70,7 +70,28 @@ namespace lw{
 		void setCallback(ButtonCallback* pCallback){
 			_pCallback = pCallback;
 		}
+        void setInt(int i){
+            _int = i;
+        }
+        int getInt(){
+            return _int;
+        }
+        void setFloat(float f){
+            _float = f;
+        }
+        float getFloat(){
+            return _float;
+        }
+        void setPointer(void* p){
+            _pointer = p;
+        }
+        void* getPointer(){
+            return _pointer;
+        }
+        
+        
 
+    protected:
 		ButtonCallback* _pCallback;
 		bool _isTracing;
 		bool _isDown;
@@ -80,6 +101,11 @@ namespace lw{
 		Font* _pFontDown;
 		Font* _pFontDisable;
 		int _gesId;
+        union{
+            int _int;
+            float _float;
+            void* _pointer;
+        };
 	};
 
 	

@@ -310,7 +310,7 @@ namespace lw{
 				if ( it == charInfoMap.end() ){
 					it = charInfoMap.find(' ');
 					if ( it == charInfoMap.end() ){
-						currX += 10;
+						currX += 3;
 						++p;
 						continue;
 					}

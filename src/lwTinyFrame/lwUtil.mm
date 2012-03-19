@@ -85,11 +85,11 @@ int UTF82W::size(){
 	return [_str length];
 }
 const wchar_t* UTF82W::data(){
-	return (const wchar_t*)[_str cStringUsingEncoding:NSUTF16LittleEndianStringEncoding];
+	return (const wchar_t*)[_str cStringUsingEncoding:NSUTF32LittleEndianStringEncoding];
 }
 
 UTF82W::operator const wchar_t*(){
-	return (const wchar_t*)[_str cStringUsingEncoding:NSUTF16LittleEndianStringEncoding];
+	return (const wchar_t*)[_str cStringUsingEncoding:NSUTF32LittleEndianStringEncoding];
 }
 
 #endif //#ifdef __APPLE__

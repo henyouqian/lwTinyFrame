@@ -21,6 +21,12 @@ namespace lw{
 		g = (c&0x0000ff00)>>8;
 		r = (c&0x000000ff);
 	}
+    void Color::set(int c){
+        a = (c&0xff000000)>>24;
+		b = (c&0x00ff0000)>>16;
+		g = (c&0x0000ff00)>>8;
+		r = (c&0x000000ff);
+    }
 
 	int Color::getInt(){
 		int c = (a << 24) + (b << 16) +  (g << 8) + r;
