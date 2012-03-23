@@ -14,6 +14,7 @@ namespace lw{
 			return _pSprite;
 		}
 		void main(float dt);
+        void collect();
 		void setFrame(int frame);
 
 	private:

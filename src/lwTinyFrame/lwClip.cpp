@@ -75,5 +75,9 @@ namespace lw{
 		lwassert(frame >= 0);
 		_t = fabs(_interval)* frame;
 	}
+    
+    void Clip::collect(){
+        _pSprite->collect();
+    }
 
 } //namespace lw
