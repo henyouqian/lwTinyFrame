@@ -51,6 +51,7 @@ namespace lw{
 		virtual void vSetPos(float x, float y);
 		virtual void setColor(const lw::Color& color);
 		virtual void setColor(const lw::Color& color, const lw::Color& downColor, const lw::Color& disableColor);
+        virtual void setSize(float w, float h);
 
 	public:
 		UICheckBox1(const char* file, int upU, int upV, int downU, int downV, int w, int h, const char* fontName, bool& ok);
@@ -70,7 +71,7 @@ namespace lw{
 		virtual void vSetPos(float x, float y);
 		virtual void setColor(const lw::Color& color);
 		virtual void setColor(const lw::Color& color, const lw::Color& downColor, const lw::Color& disableColor);
-		void setSize(float w, float h);
+		virtual void setSize(float w, float h);
 
 	public:
 		UICheckBox9(const char* file, int upU, int upV, int downU, int downV, int uvW1, int uvW2, int uvW3, int uvH1, int uvH2, int uvH3, const char* fontName, bool& ok);
@@ -267,6 +268,12 @@ namespace lw{
 			delete _pSpriteDisable;
 		}
 	}
+    
+    void UICheckBox1::setSize(float w, float h){
+        _pSpriteUp->setSize(w, h);
+        _pSpriteDown->setSize(w, h);
+        _pSpriteDisable->setSize(w, h);
+    }
 
 	void UICheckBox1::vSetPos(float x, float y){
 		_x = x;
