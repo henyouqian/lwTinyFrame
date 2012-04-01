@@ -82,21 +82,21 @@ namespace lw{
 	}
 
 	void Sound::setPitchNow(float pitch){
+        _pitch = pitch;
 		if ( _source ){
-			_pitch = pitch;
 			alSourcef(_source, AL_PITCH, pitch);
 		}
 	}
 	void Sound::setVolumeNow(float volume){
+        _volume = volume;
 		if ( _source ){
-			_volume = volume;
 			alSourcef(_source, AL_GAIN, volume);
 		}
 	}
 	
 	void Sound::setSecOffsetNow(float offset){
+        _secOffset = offset;
 		if ( _source ){
-			_secOffset = offset;
 			alSourcef(_source, AL_SEC_OFFSET, offset);
 		}
 	}
