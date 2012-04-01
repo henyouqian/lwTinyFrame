@@ -458,8 +458,8 @@ namespace lw{
 	}
 	
 	void App::quit(){
+        TaskMgr::quit();
 		vQuit();
-		TaskMgr::quit();
 		UIQuit();
 		Font::quit();
 		TextureRes::quit();
