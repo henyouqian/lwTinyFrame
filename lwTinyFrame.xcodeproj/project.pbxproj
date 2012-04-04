@@ -1155,7 +1155,10 @@
 		D07C1B6D1344E2700029684B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = armv6;
+				ARCHS = (
+					armv7,
+					armv6,
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
@@ -1166,14 +1169,17 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
-				VALID_ARCHS = armv6;
+				VALID_ARCHS = "armv7 armv6";
 			};
 			name = Debug;
 		};
 		D07C1B6E1344E2700029684B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = armv6;
+				ARCHS = (
+					armv7,
+					armv6,
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -1181,7 +1187,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
-				VALID_ARCHS = armv6;
+				VALID_ARCHS = "armv7 armv6";
 			};
 			name = Release;
 		};
@@ -1239,7 +1245,10 @@
 		D08E9599138BBDCB00068D11 /* Ad Hoc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = armv6;
+				ARCHS = (
+					armv7,
+					armv6,
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -1247,7 +1256,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = NO;
-				VALID_ARCHS = armv6;
+				VALID_ARCHS = "armv7 armv6";
 			};
 			name = "Ad Hoc";
 		};

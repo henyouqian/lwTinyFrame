@@ -15,8 +15,7 @@ namespace lw{
 	class CheckBoxCallback{
 	public:
 		virtual ~CheckBoxCallback(){}
-		virtual void vOnCheck(lw::UICheckBox* pCb){}
-		virtual void vOnUncheck(lw::UICheckBox* pCb){}
+		virtual void vOnCheck(lw::UICheckBox* pCb, bool checked){}
 	};
 
 	struct CheckBox1Def{

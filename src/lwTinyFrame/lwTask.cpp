@@ -210,7 +210,7 @@ namespace lw {
 			for ( ; itl != endl; ++itl ){
 				pTask = *itl;
 				lwassert(pTask);
-				if ( pTask->_status == Task::STATUS_RUNNING ){
+				if ( pTask->_status == Task::STATUS_RUNNING && pTask->_isVisible ){
                     std::list<lw::Gesture>::const_iterator itg = gestures.begin();
                     std::list<lw::Gesture>::const_iterator itgEnd = gestures.end();
                     for ( ;itg != itgEnd; ++itg ){
@@ -273,7 +273,9 @@ namespace lw {
     }
     
 	void Task::main(float elapsed){
-		vMain(elapsed);
+        if ( _isVisible ){
+            vMain(elapsed);
+        }
 	}
 	void Task::draw(float elapsed){
 		if ( _isVisible ){

@@ -176,13 +176,13 @@ namespace lw{
 					if ( _isDown ){
 						if ( !_isCheckOnly ){
 							if ( _pCallback ){
-								_pCallback->vOnUncheck(this);
+								_pCallback->vOnCheck(this, false);
 							}
 							_isDown = false;
 						}
 					}else{
 						if ( _pCallback ){
-							_pCallback->vOnCheck(this);
+							_pCallback->vOnCheck(this, true);
 						}
 						_isDown = true;
 					}
@@ -191,6 +191,8 @@ namespace lw{
 					return true;
 			}
 			break;
+        default:
+            break;
 		}
 		return false;
 	}

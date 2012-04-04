@@ -23,7 +23,7 @@ namespace lw{
 	void UIRadioBoxGrp::vOnCheck(lw::UICheckBox* pCb){
 		uncheckAll();
 		pCb->check(true);
-		_pCallback->vOnCheck(pCb);
+		_pCallback->vOnCheck(pCb, true);
 	}
 
 	void UIRadioBoxGrp::uncheckAll(){
