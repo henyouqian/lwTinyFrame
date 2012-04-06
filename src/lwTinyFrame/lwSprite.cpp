@@ -42,14 +42,14 @@ namespace lw{
 	void Sprite::setUV(int u, int v, int w, int h){
 		_u1 = (float)u/(float)_texW;
 		_v1 = (float)v/(float)_texH;
-		if ( w <= 0 ){
+		if ( w < 0 ){
 			_width = _texW;
 		}else{
 			_width = w;
 		}
 		_u2 = (float)(u+_width)/(float)_texW;
 
-		if ( h <= 0 ){
+		if ( h < 0 ){
 			_height = _texH;
 		}else{
 			_height = h;

@@ -1267,6 +1267,12 @@
 				DSTROOT = /tmp/lwTinyFrame.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = src/lwTinyFrame/stdafx.h;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_STDINT_H,
+					HAVE_STAT,
+					HAVE_USLEEP,
+					HAVE_UNISTD_H,
+				);
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = (
 					include,
