@@ -7,7 +7,8 @@ namespace lw{
 
 	std::map<std::string, TextureRes*> TextureRes::_resMap;
 
-	TextureRes::TextureRes(const char* fileName, bool reserveData, bool revertY) : _glId(-1), _pImgData(NULL){
+	TextureRes::TextureRes(const char* fileName, bool& ok, bool reserveData, bool loadOnly, bool revertY) : _glId(-1), _pImgData(NULL){
+        ok = false;
 		lwassert(fileName);
 		_fileName = fileName;
 
@@ -18,6 +19,18 @@ namespace lw{
 			return;
 		}
 		_f fpath(fileName);
+        if ( fpath.isValid() ){
+            if ( loadOnly ){
+                loadImage(fpath, reserveData, revertY);
+            }else{
+                loadAndCreateOgl(fpath, reserveData, revertY);
+            }
+        }else{
+            lwerror("texture file is not exist: " << fileName);
+            return;
+        }
+        ok = true;
+        /*
 		if ( fileName[len-4] == '.' && fileName[len-3] == 'p' 
 		&& fileName[len-2] == 'n' && fileName[len-1] == 'g'){
 			if ( fpath.isValid() ){
@@ -30,6 +43,7 @@ namespace lw{
 			lwerror("only support PNG file: " << fileName);
 			return;
 		}
+        */
 	}
 
 	TextureRes::TextureRes(int w, int h, const char* pData, bool hasAlpha, bool reserveData, bool revertY) : _glId(-1), _pImgData(NULL){
@@ -55,10 +69,35 @@ namespace lw{
 			_glId = -1;
 		}
 	}
-
-	void TextureRes::loadPNG(const char* path, bool reserveData, bool revertY){
+    
+    void TextureRes::loadImage(const char* path, bool reserveData, bool revertY){
 		_pImgData = SOIL_load_image(path, &_w, &_h, &_numChannels, SOIL_LOAD_AUTO);
-		_numChannels == 4 ? GL_RGBA:GL_RGB;
+        _reserveData = reserveData;
+        _revertY = revertY;
+	}
+    
+    void TextureRes::createOgl(){
+        if ( _glId != -1 ){
+            return;
+        }
+        _glId = SOIL_internal_create_OGL_texture(_pImgData, _w, _h, _numChannels,
+                                                 SOIL_CREATE_NEW_ID, _revertY ? SOIL_FLAG_INVERT_Y:0,
+                                                 GL_TEXTURE_2D, GL_TEXTURE_2D,
+                                                 GL_MAX_TEXTURE_SIZE);
+		
+		if ( !_reserveData ){
+			SOIL_free_image_data(_pImgData);
+			_pImgData = NULL;
+		}
+		
+		if ( _glId == 0 ){
+			lwerror("Failed to load texture: filename=" << _fileName.c_str());
+			_glId = -1;
+		}
+    }
+
+	void TextureRes::loadAndCreateOgl(const char* path, bool reserveData, bool revertY){
+		_pImgData = SOIL_load_image(path, &_w, &_h, &_numChannels, SOIL_LOAD_AUTO);
 		_glId = SOIL_internal_create_OGL_texture(_pImgData, _w, _h, _numChannels,
 			SOIL_CREATE_NEW_ID, revertY ? SOIL_FLAG_INVERT_Y:0,
 			GL_TEXTURE_2D, GL_TEXTURE_2D,
@@ -91,15 +130,14 @@ namespace lw{
 			}
 		}
 	}
-	TextureRes* TextureRes::create(const char* fileName, bool reserveData, bool revertY){
+	TextureRes* TextureRes::create(const char* fileName, bool reserveData, bool loadOnly, bool revertY){
 		lwassert(fileName);
-
 		std::string strFileName = fileName;
-
 		std::map<std::string, TextureRes*>::iterator it = _resMap.find(strFileName);
 		if ( it == _resMap.end() ){
-			TextureRes* p = new TextureRes(fileName, reserveData, revertY);
-			if ( p && p->_glId == -1 ){
+            bool ok = false;
+			TextureRes* p = new TextureRes(fileName, ok, reserveData, loadOnly, revertY);
+			if ( p && !ok  ){
 				delete p;
 				return NULL;
 			}else{

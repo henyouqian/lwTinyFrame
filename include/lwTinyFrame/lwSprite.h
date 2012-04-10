@@ -7,8 +7,9 @@ namespace lw{
 
 	class Sprite{
 	public:
-		static Sprite* create(const char* texFileName, bool reserveData = false);
+		static Sprite* create(const char* texFileName, bool reserveData = false, bool loadOnly = false);
 		~Sprite();
+        void createOgl();
 		void setUV(int u, int v, int w, int h);
 		void setAnchor(float x, float y){
 			if ( x != _ancX || y != _ancY ){
@@ -87,7 +88,7 @@ namespace lw{
 		};
 
 	private:
-		Sprite(const char* texFileName, bool reserveData, bool &ok);
+		Sprite(const char* texFileName, bool reserveData, bool loadOnly, bool &ok);
 		void updateMatrix();
 
 	private:

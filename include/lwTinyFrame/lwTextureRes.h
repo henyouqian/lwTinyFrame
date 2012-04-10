@@ -7,7 +7,7 @@ namespace lw{
 
 	class TextureRes : public Res{
 	public:
-		static TextureRes* create(const char* fileName, bool reserveData = false, bool revertY = false);	//reserveData only for PNG
+		static TextureRes* create(const char* fileName, bool reserveData = false, bool loadOnly = false, bool revertY = false);	//reserveData only for PNG
 		static TextureRes* create(int w, int h, const char* pData, bool hasAlpha, bool reserveData, bool revertY);
 		GLuint getGlId() const{
 			return _glId;
@@ -26,12 +26,14 @@ namespace lw{
 			return _numChannels;
 		}
 		void reserveData();
+        void createOgl();
 
 	private:
 		~TextureRes();
-		TextureRes(const char* filename, bool reserveData = false, bool revertY = false);
+		TextureRes(const char* filename, bool& ok, bool reserveData = false, bool loadOnly = false, bool revertY = false);
 		TextureRes(int w, int h, const char* pData, bool hasAlpha, bool reserveData = false, bool revertY = false);
-		void loadPNG(const char* path, bool reserveData, bool revertY = false);
+		void loadAndCreateOgl(const char* path, bool reserveData, bool revertY);
+        void loadImage(const char* path, bool reserveData, bool revertY);
 
 	private:
 		GLuint _glId;
@@ -41,6 +43,8 @@ namespace lw{
 		unsigned char* _pImgData;
 
 		static std::map<std::string, TextureRes*> _resMap;
+        bool _reserveData;
+        bool _revertY;
 		
 	public:
 		static void quit();

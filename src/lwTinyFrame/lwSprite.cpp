@@ -6,10 +6,10 @@
 
 namespace lw{
 	
-	Sprite* Sprite::create(const char* texFileName, bool reserveData){
+	Sprite* Sprite::create(const char* texFileName, bool reserveData, bool loadOnly){
 		lwassert(texFileName);
 		bool ok;
-		Sprite* p = new Sprite(texFileName, reserveData, ok);
+		Sprite* p = new Sprite(texFileName, reserveData, loadOnly, ok);
 		if ( p && !ok ){
 			lwerror("Sprite construct failed");
 			delete p;
@@ -18,19 +18,23 @@ namespace lw{
 		return p;
 	}
 
-	Sprite::Sprite(const char* texFileName, bool reserveData, bool &ok)
+	Sprite::Sprite(const char* texFileName, bool reserveData, bool loadOnly, bool &ok)
 		:_u1(0.f), _v1(0.f), _u2(1.f), _v2(1.f)
 		,_ancX(0.f), _ancY(0.f), _color(COLOR_WHITE)
 		,_posX(0.f), _posY(0.f), _scaleX(1.f), _scaleY(1.f), _rotate(0.f)
 		,_width(1), _height(1), _matrixNeedUpdate(false){
-			_pTextureRes = TextureRes::create(texFileName, reserveData);
+			_pTextureRes = TextureRes::create(texFileName, reserveData, loadOnly, false);
 			ok = _pTextureRes != NULL;
 			_texW = _pTextureRes->getWidth();
 			_texH = _pTextureRes->getHeight();
-			_glId = _pTextureRes->getGlId();
 			_hasAlpha = _pTextureRes->getChannelNum() == 4;
 			setUV(0, 0, -1, -1);
 			_matrix.identity();
+            if ( loadOnly ){
+                _glId = -1;
+            }else{
+                _glId = _pTextureRes->getGlId();
+            }
 	}
 
 	Sprite::~Sprite(){
@@ -38,6 +42,11 @@ namespace lw{
 			_pTextureRes->release();
 		}
 	}
+    
+    void Sprite::createOgl(){
+        _pTextureRes->createOgl();
+        _glId = _pTextureRes->getGlId();
+    }
 
 	void Sprite::setUV(int u, int v, int w, int h){
 		_u1 = (float)u/(float)_texW;
