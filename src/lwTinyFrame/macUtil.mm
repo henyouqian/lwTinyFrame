@@ -2,6 +2,7 @@
 #import <UIKit/UIKit.h>
 
 void macOnChangeOrientation(int orient){
+    return;
     if ( orient == 0 ){
         [UIApplication sharedApplication].statusBarOrientation = UIInterfaceOrientationLandscapeLeft;
     }else if ( orient == 1 ){
