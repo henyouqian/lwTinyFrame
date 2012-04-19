@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		D036EC201534573E00201765 /* lwThread.mm in Sources */ = {isa = PBXBuildFile; fileRef = D036EC1F1534573E00201765 /* lwThread.mm */; };
 		D036EC231534577500201765 /* lwThread.h in Headers */ = {isa = PBXBuildFile; fileRef = D036EC221534577500201765 /* lwThread.h */; };
+		D037528B1540A4BB00C5CE7F /* lwLocalization.h in Headers */ = {isa = PBXBuildFile; fileRef = D037528A1540A4BB00C5CE7F /* lwLocalization.h */; };
+		D037528E1540A54D00C5CE7F /* lwLocalization.mm in Sources */ = {isa = PBXBuildFile; fileRef = D037528D1540A54D00C5CE7F /* lwLocalization.mm */; };
 		D0589800138B7E7800D122DC /* macUtil.mm in Sources */ = {isa = PBXBuildFile; fileRef = D05897FF138B7E7800D122DC /* macUtil.mm */; };
 		D0589803138B7EBF00D122DC /* macUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = D0589802138B7EBF00D122DC /* macUtil.h */; };
 		D06123E013FA3D2900DF5B38 /* lwUIRadioBox.h in Headers */ = {isa = PBXBuildFile; fileRef = D06123DF13FA3D2900DF5B38 /* lwUIRadioBox.h */; };
@@ -229,6 +231,8 @@
 /* Begin PBXFileReference section */
 		D036EC1F1534573E00201765 /* lwThread.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = lwThread.mm; sourceTree = "<group>"; };
 		D036EC221534577500201765 /* lwThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lwThread.h; sourceTree = "<group>"; };
+		D037528A1540A4BB00C5CE7F /* lwLocalization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lwLocalization.h; sourceTree = "<group>"; };
+		D037528D1540A54D00C5CE7F /* lwLocalization.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = lwLocalization.mm; sourceTree = "<group>"; };
 		D05897FF138B7E7800D122DC /* macUtil.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = macUtil.mm; sourceTree = "<group>"; };
 		D0589802138B7EBF00D122DC /* macUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = macUtil.h; sourceTree = "<group>"; };
 		D06123DF13FA3D2900DF5B38 /* lwUIRadioBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lwUIRadioBox.h; sourceTree = "<group>"; };
@@ -776,6 +780,7 @@
 		D08F60781346BC29006957FE /* lwTinyFrame */ = {
 			isa = PBXGroup;
 			children = (
+				D037528A1540A4BB00C5CE7F /* lwLocalization.h */,
 				D036EC221534577500201765 /* lwThread.h */,
 				D06123DF13FA3D2900DF5B38 /* lwUIRadioBox.h */,
 				D0589802138B7EBF00D122DC /* macUtil.h */,
@@ -818,6 +823,7 @@
 		D08F608D1346BC4D006957FE /* lwTinyFrame */ = {
 			isa = PBXGroup;
 			children = (
+				D037528D1540A54D00C5CE7F /* lwLocalization.mm */,
 				D036EC1F1534573E00201765 /* lwThread.mm */,
 				D06123E213FA3D4300DF5B38 /* lwUIRadioBox.cpp */,
 				D05897FF138B7E7800D122DC /* macUtil.mm */,
@@ -1044,6 +1050,7 @@
 				D0914B7713D59A7800CC6AD1 /* alutInternal.h in Headers */,
 				D06123E013FA3D2900DF5B38 /* lwUIRadioBox.h in Headers */,
 				D036EC231534577500201765 /* lwThread.h in Headers */,
+				D037528B1540A4BB00C5CE7F /* lwLocalization.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1154,6 +1161,7 @@
 				D06123E313FA3D4300DF5B38 /* lwUIRadioBox.cpp in Sources */,
 				D07E12BF1498A0DC0026D42A /* lwUtil.mm in Sources */,
 				D036EC201534573E00201765 /* lwThread.mm in Sources */,
+				D037528E1540A54D00C5CE7F /* lwLocalization.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
