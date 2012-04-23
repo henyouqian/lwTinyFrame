@@ -51,6 +51,7 @@ namespace lw{
 		virtual void vSetPos(float x, float y);
 		virtual void setColor(const lw::Color& color);
 		virtual void setColor(const lw::Color& color, const lw::Color& downColor, const lw::Color& disableColor);
+        virtual void setSize(float w, float h);
 
 	public:
 		UIButton1(const char* file, int upU, int upV, int downU, int downV, int w, int h, const char* fontName, bool& ok);
@@ -70,7 +71,7 @@ namespace lw{
 		virtual void vSetPos(float x, float y);
 		virtual void setColor(const lw::Color& color);
 		virtual void setColor(const lw::Color& color, const lw::Color& downColor, const lw::Color& disableColor);
-		void setSize(float w, float h);
+		virtual void setSize(float w, float h);
 
 	public:
 		UIButton9(const char* file, int upU, int upV, int downU, int downV, int uvW1, int uvW2, int uvW3, int uvH1, int uvH2, int uvH3, const char* fontName, bool& ok);
@@ -344,6 +345,13 @@ namespace lw{
 		_pSpriteDown->setColor(downColor);
 		_pSpriteDisable->setColor(disableColor);
 	}
+    void UIButton1::setSize(float w, float h){
+        _w = w;
+        _h = h;
+        _pSpriteUp->setSize(w, h);
+        _pSpriteDown->setSize(w, h);
+        _pSpriteDisable->setSize(w, h);
+    }
 
 	UIButton* UIButton::create9(const Button9Def& def){
 		return create9(def.file, def.upU, def.upV, def.downU, def.downV, def.disableU, def.disableV, def.uvW1, def.uvW2, def.uvW3, def.uvH1, def.uvH2, def.uvH3, def.fontName, def.minMagFilter);
@@ -469,11 +477,11 @@ namespace lw{
 	}
 
 	void UIButton9::setSize(float w, float h){
+        _w = w;
+        _h = h;
 		_pSpriteUp->setSize(w, h);
 		_pSpriteDown->setSize(w, h);
 		_pSpriteDisable->setSize(w, h);
-		_w = w;
-		_h = h;
 		float fx = _x+_w*.5f;
 		float fy = _y+_h*.5f;
 		if ( _pFontUp ){
