@@ -2,7 +2,6 @@
 #define __LW_LOCALIZATION_H__
 
 namespace lw {
-    class Sprite;
     void getLocalStr(const char* str, std::string& oStr);
     
     enum Language{
@@ -10,6 +9,8 @@ namespace lw {
         CNS,
         CNT,
         JP,
+        FR,
+        DE,
         UNKNOWN,
         NOT_INIT,
     };

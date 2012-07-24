@@ -1,20 +1,33 @@
 #include "lwFileSys.h"
 
 _f::_f(const char* filename){
-	//NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];	
-	NSString* str = [[NSString alloc] initWithCString:filename];
+	NSString* str = [[NSString alloc] initWithUTF8String:filename];
 	NSString* path = [[NSBundle mainBundle] pathForResource:str ofType:nil];
+    [str release];
 	if ( path == nil ){
-		//lwerror("file miss: " << filename);
-		_pathStr.clear();
+		_isValid = false;
 	}else{
 		_pathStr = [path UTF8String];
-		//[path release];
+        _isValid = true;
 	}
-	[str dealloc];
-	
-	//[pool release];
 }
+
+_fdoc::_fdoc(const char* filename){
+    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString* documentsDirectory = [paths objectAtIndex:0];
+    _pathStr = [documentsDirectory UTF8String];
+    _pathStr.append("/");
+    _pathStr.append(filename);
+    
+	FILE* pf = fopen(_pathStr.c_str(), "rb");
+	if ( pf == NULL ){
+        _isValid = false;
+    }else{
+        fclose(pf);
+        _isValid = true;
+    }
+}
+
 
 namespace lw {
 	const char* getDocDir(){

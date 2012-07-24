@@ -187,7 +187,7 @@ namespace lw{
 						_isDown = true;
 					}
 					
-					g_gestrueMgr.deleteGesture(evt.x, evt.y);
+					//g_gestrueMgr.deleteGesture(evt.x, evt.y);
 					return true;
 			}
 			break;

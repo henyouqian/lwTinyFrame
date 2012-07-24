@@ -1,160 +1,29 @@
-#include "stdafx.h"
+
 #include "lwHTTPClient.h"
 #include "lwUtil.h"
-#include <sstream>
 
-@interface HTTPCallback : NSObject {
+@interface HTTPCallback : NSObject<NSURLConnectionDelegate> {
     lw::HTTPMsg *pMsg;
 }
-@end
-
-@implementation HTTPCallback
-- (id)initWithMsg:(lw::HTTPMsg*)p
-{
-    if ( self =[super init] ){
-        pMsg=p;
-        pMsg->_pObjCCallback=self;
-    }
-    return self;
-}
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
-{
-    pMsg->getBuff()->reset();
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-    pMsg->getBuff()->write((char*)([data bytes]), [data length]);
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
-    pMsg->getBuff()->writeChar(0);
-    pMsg->getClient()->addToRespond(pMsg);
-    [connection release];
-}
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-    pMsg->getClient()->deleteMsg(pMsg);
-    lwerror("http error:" << [[error localizedDescription]UTF8String] << " from: " << pMsg->getObjName());
-}
-
-- (void)dealloc
-{
-    [super dealloc];
-}
-
+- (id)initWithMsg:(lw::HTTPMsg*)p;
 @end
 
 namespace lw{
-	void HttpMsgBuf::write(const char* p, int size){
-		if ( _size + size > _buffSize ){
-			while ( _buffSize < _size + size ){
-				_buffSize *= 2;
-			}
-			char* buff0 = _buff;
-			_buff = new char[_buffSize];
-			memcpy(_buff, buff0, _size);
-			delete [] buff0;
-			_pRead = _buff;
-		}
-		memcpy(_buff+_size, p, size);
-		_size += size;
-	}
-	void HttpMsgBuf::writeChar(char c){
-		write((char*)&c, sizeof(char));
-	}
-	void HttpMsgBuf::writeShort(short s){
-		write((char*)&s, sizeof(short));
-	}
-	void HttpMsgBuf::writeInt(int n){
-		write((char*)&n, sizeof(int));
-	}
-	void HttpMsgBuf::writeFloat(float f){
-		write((char*)&f, sizeof(float));
-	}
-	void HttpMsgBuf::writeString(const wchar_t* str){
-		W2UTF8 str8(str);
-		writeInt(str8.size());
-		write(str8.data(), str8.size());
-	}
-	void HttpMsgBuf::writeUtf8(const char* str){
-		int sz = (int)strlen(str);
-		writeInt(sz);
-		write(str, sz);
-	}
-	void HttpMsgBuf::writeBlob(const char* p, int size){
-		writeInt(size);
-		write(p, size);
-	}
-	void HttpMsgBuf::readReset(){
-		_pRead = _buff;
-	}
-	
-	char HttpMsgBuf::readChar(){
-		if ( _pRead + sizeof(char) > _buff + _size ){
-			lwerror("out of bound");
-			return 0;
-		}
-		char* p = (char*)_pRead;
-		_pRead += sizeof(char);
-		return *p;
-	}
-	short HttpMsgBuf::readShort(){
-		if ( _pRead + sizeof(short) > _buff + _size ){
-			lwerror("out of bound");
-			return 0;
-		}
-		short* p = (short*)_pRead;
-		_pRead += sizeof(short);
-		return *p;
-	}
-	int HttpMsgBuf::readInt(){
-		if ( _pRead + sizeof(int) > _buff + _size ){
-			lwerror("out of bound");
-			return 0;
-		}
-		int* p = (int*)_pRead;
-		_pRead += sizeof(int);
-		return *p;
-	}
-	float HttpMsgBuf::readFloat(){
-		if ( _pRead + sizeof(float) > _buff + _size ){
-			lwerror("out of bound"<<_size);
-			return 0;
-		}
-		float* p = (float*)_pRead;
-		_pRead += sizeof(float);
-		return *p;
-	}
-	const char* HttpMsgBuf::readString(){
-		int len = (int)strlen(_pRead);
-		if ( _pRead + len > _buff + _size ){
-			lwerror("out of bound");
-			return NULL;
-		}
-		char* p = (char*)_pRead;
-		_pRead += len + 1;
-		return p;
-	}
-	void HttpMsgBuf::readBlob(const char*& pData, int& dataSize){
-		dataSize = readInt();
-		if ( dataSize <= 0 ){
-			lwerror("size error");
-			return;
-		}
-		if ( _pRead + dataSize >= _buff + _size ){
-			lwerror("out of bound");
-			return;
-		}
-		pData = (char*)_pRead;
-		_pRead += dataSize;
-	}
-	
-	HTTPMsg::HTTPMsg(const char* objName, HTTPClient* pClient, bool useHTTPS)
-	:_pClient(pClient), _buff(BUFF_SIZE), _useHTTPS(useHTTPS){
-		lwassert(objName);
-		_objName = objName;
+    HTTPErrorCallback _pHTTPErrorCallback = NULL;
+    HTTPErrorCallback _pHTTPOKCallback = NULL;
+    
+    void setHTTPErrorCallback(HTTPErrorCallback pCallback){
+        _pHTTPErrorCallback = pCallback;
+    }
+    
+    void setHTTPOKCallback(HTTPOKCallback pCallback){
+        _pHTTPOKCallback = pCallback;
+    }
+    
+	HTTPMsg::HTTPMsg(const char* route, HTTPClient* pClient, bool useHTTPS)
+	:_pClient(pClient), _useHTTPS(useHTTPS){
+		lwassert(route);
+		_buff = route;
     }
 
 	HTTPMsg::~HTTPMsg(){
@@ -166,7 +35,7 @@ namespace lw{
 	}
     
     void HTTPMsg::addParam(const char* param){
-        _objName.append(param);
+        _buff.append(param);
     }
     
     HTTPClient::HTTPClient(const char* host)
@@ -175,26 +44,16 @@ namespace lw{
 	}
 
 	HTTPClient::~HTTPClient(){
-		std::vector<HTTPMsg*>::iterator it = _msgs.begin();
-		std::vector<HTTPMsg*>::iterator itEnd = _msgs.end();
-		for ( ; it != itEnd; ++it ){
-			delete *it;
-		}
-		_msgs.clear();
 		
-	}
-
-	bool HTTPClient::connect(){
-		return false;
 	}
 
 	void HTTPClient::sendMsg(HTTPMsg* pMsg, bool useHTTPS){
         std::stringstream ss;
-		const char* objName = pMsg->getObjName();
+		const char* routeparam = pMsg->getBuff().c_str();
         if ( useHTTPS && _httpsEnable ){
-            ss << "https://" << _strHost.c_str() << objName;
+            ss << "https://" << _strHost.c_str() << routeparam;
         }else{
-            ss << "http://" << _strHost.c_str() << objName;
+            ss << "http://" << _strHost.c_str() << routeparam;
         }
         NSString* urlString=[[NSString alloc] initWithUTF8String:ss.str().c_str()];
         NSURL* url=[[NSURL alloc] initWithString:[urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
@@ -205,42 +64,58 @@ namespace lw{
         // and start loading the data
         HTTPCallback* pCallback = [[HTTPCallback alloc] initWithMsg:pMsg];
         NSURLConnection *theConnection=[[NSURLConnection alloc] initWithRequest:theRequest delegate:pCallback];
-        if (theConnection) {
-            pMsg->getBuff()->reset();
-            _msgs.push_back(pMsg);
-        } else {
+        if (!theConnection) {
+            pMsg->onRespond(LWHTTPERR_CONNECTION);
             delete pMsg;
         }
         [urlString release];
         [url release];
 	}
-
-	void HTTPClient::deleteMsg(HTTPMsg* pMsg){
-		std::vector<HTTPMsg*>::iterator it = _msgs.begin();
-		std::vector<HTTPMsg*>::iterator itEnd = _msgs.end();
-		for ( ; it != itEnd; ++it ){
-			if ( *it == pMsg ){
-				_msgs.erase(it);
-				delete pMsg;
-				break;
-			}
-		}
-	}
-	
-	void HTTPClient::addToRespond(HTTPMsg* pMsg){
-		//lw::Locker l(CriticalSection::getGlobal());
-		_respondMsgs.push_back(pMsg);
-	}
-
-	void HTTPClient::main(){
-		std::vector<HTTPMsg*>::iterator it = _respondMsgs.begin();
-		std::vector<HTTPMsg*>::iterator itEnd = _respondMsgs.end();
-		for ( ; it != itEnd; ++it ){
-			(*it)->getBuff()->readReset();
-			(*it)->onRespond();
-			deleteMsg(*it);
-		}
-		_respondMsgs.clear();
-	}
 	
 } //namespace lw
+
+@implementation HTTPCallback
+- (id)initWithMsg:(lw::HTTPMsg*)p
+{
+    if ( self =[super init] ){
+        pMsg=p;
+        pMsg->_pObjCCallback=self;
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    [super dealloc];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+{
+    pMsg->getBuff().clear();
+    if ( lw::_pHTTPOKCallback ){
+        lw::_pHTTPOKCallback();
+    }
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+{
+    pMsg->getBuff().append((char*)([data bytes]), [data length]);
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+    pMsg->onRespond(LWHTTPERR_NONE);
+    delete pMsg;
+    [connection release];
+}
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+    lwerror("http error:" << [[error localizedDescription]UTF8String] << " from: " << pMsg->getBuff().c_str());
+    if ( lw::_pHTTPErrorCallback ){
+        lw::_pHTTPErrorCallback();
+    }
+    pMsg->onRespond(LWHTTPERR_NET);
+    delete pMsg;
+}
+
+@end

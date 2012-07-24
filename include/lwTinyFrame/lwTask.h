@@ -37,7 +37,6 @@ namespace lw {
 		virtual void vShow(bool b){};
 
 	protected:
-		
 		Status _status;
 		int _priority;
 		bool _isVisible;

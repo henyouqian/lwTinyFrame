@@ -78,16 +78,16 @@ namespace lw{
 		}
 	}
 	
-	void GestureMgr::deleteGesture(float x, float y){
-		std::list<Gesture>::iterator git = _gestures.begin();
-		std::list<Gesture>::iterator gitEnd = _gestures.end();
-		for ( ; git != gitEnd; ++git ){
-			if ( x == git->evt.x && y == git->evt.y ){
-				_gestures.erase(git);
-				break;
-			}
-		}
-	}
+//	void GestureMgr::deleteGesture(float x, float y){
+//		std::list<Gesture>::iterator git = _gestures.begin();
+//		std::list<Gesture>::iterator gitEnd = _gestures.end();
+//		for ( ; git != gitEnd; ++git ){
+//			if ( x == git->evt.x && y == git->evt.y ){
+//				_gestures.erase(git);
+//				break;
+//			}
+//		}
+//	}
 	
 	GestureMgr g_gestrueMgr;
 

@@ -27,11 +27,30 @@ public:
 		return _pathStr.c_str();
 	}
 	bool isValid(){
-		return !_pathStr.empty();
+		return _isValid;
 	}
 
 private:
 	std::string _pathStr;
+    bool _isValid;
+};
+
+class _fdoc{
+public:
+	_fdoc(const char* filename);
+	const char* getPath(){
+		return _pathStr.c_str();
+	}
+	operator const char*(){
+		return _pathStr.c_str();
+	}
+	bool isValid(){
+		return _isValid;
+	}
+    
+private:
+	std::string _pathStr;
+    bool _isValid;
 };
 
 

@@ -10,7 +10,8 @@ namespace lw{
 	void srand(){
 #ifdef WIN32
 		std::srand(GetTickCount());
-#else ifdef __APPLE__
+#endif
+#ifdef __APPLE__
 		std::srand(CFAbsoluteTimeGetCurrent());
 #endif
 	}

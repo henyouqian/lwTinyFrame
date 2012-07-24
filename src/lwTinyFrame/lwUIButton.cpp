@@ -179,7 +179,7 @@ namespace lw{
 				if ( _pCallback ){
 					_pCallback->vOnDown(this);
 				}
-				g_gestrueMgr.deleteGesture(evt.x, evt.y);
+				//g_gestrueMgr.deleteGesture(evt.x, evt.y);
 				return true;
 			}
 			break;

@@ -17,16 +17,19 @@ namespace lw{
     
     Language getLanguage(){
         if ( _currLan == lw::NOT_INIT ){
-            std::string str;
-            getLocalStr("__LANGUAGE__", str);
-            if ( str.compare("EN") == 0 ){
+            NSString * language = [[NSLocale preferredLanguages] objectAtIndex:0];
+            if ( [language isEqualToString:@"en"] ){
                 _currLan = lw::EN;
-            }else if ( str.compare("CNS") == 0 ){
+            }else if ( [language isEqualToString:@"zh-Hans"] ){
                 _currLan = lw::CNS;
-            }else if ( str.compare("CNT") == 0 ){
+            }else if ( [language isEqualToString:@"zh-Hant"] ){
                 _currLan = lw::CNT;
-            }else if ( str.compare("JP") == 0 ){
+            }else if ( [language isEqualToString:@"ja"] ){
                 _currLan = lw::JP;
+            }else if ( [language isEqualToString:@"fr"] ){
+                _currLan = lw::FR;
+            }else if ( [language isEqualToString:@"de"] ){
+                _currLan = lw::DE;
             }else{
                 _currLan = lw::UNKNOWN;
             }

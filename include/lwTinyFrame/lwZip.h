@@ -1,7 +1,7 @@
 #ifndef __LW_ZIP_H__
 #define __LW_ZIP_H__
 
-#include "zlib/zlib.h"
+#include "zlib.h"
 
 namespace lw{
 	int compress(char* dest, int* destLen, const void* src, int srcLen, int level = Z_DEFAULT_COMPRESSION);

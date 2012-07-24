@@ -17,6 +17,7 @@
 #ifdef __cplusplus
 #   include <string>
 #   include <set>
+#   include <sstream>
 
 #	include "lwTinyFrame/lwLog.h"
 #	include "lwTinyFrame/lwPreInclude.h"
@@ -29,13 +30,12 @@
 #	ifdef __APPLE__
 #       include <OpenAL/al.h>
 #       include <OpenAL/alc.h>
-#       include "AL/alut.h"
+#       include "ALUT/alut.h"
 #   endif
 #endif
 
 #ifdef __OBJC__
 #   include <Foundation/Foundation.h>
-#   include <CFNetwork/CFNetwork.h>
 #endif
 
 

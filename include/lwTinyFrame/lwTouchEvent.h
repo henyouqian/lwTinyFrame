@@ -29,7 +29,7 @@ namespace lw{
         void reset();
 		void main();
 		void onTouchEvent(const std::vector<lw::TouchEvent>& events);
-		void deleteGesture(float x, float y);
+		//void deleteGesture(float x, float y);
 		const std::list<lw::Gesture>& getGestures(){
 			return _gestures;
 		}
