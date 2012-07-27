@@ -1,11 +1,12 @@
 
 #include "lwHTTPClient.h"
-#include "lwUtil.h"
 
-@interface HTTPCallback : NSObject<NSURLConnectionDelegate> {
+@interface HTTPDelegate : NSObject<NSURLConnectionDelegate> {
     lw::HTTPMsg *pMsg;
+    bool dead;
 }
 - (id)initWithMsg:(lw::HTTPMsg*)p;
+- (void)die;
 @end
 
 namespace lw{
@@ -27,59 +28,54 @@ namespace lw{
     }
 
 	HTTPMsg::~HTTPMsg(){
-		[(HTTPCallback*)_pObjCCallback release];
+        [(HTTPDelegate*)_pDelegate die];
+		[(HTTPDelegate*)_pDelegate release];
 	}
 
 	void HTTPMsg::send(){
-		_pClient->sendMsg(this, _useHTTPS);
-	}
-    
-    void HTTPMsg::addParam(const char* param){
-        _buff.append(param);
-    }
-    
-    HTTPClient::HTTPClient(const char* host)
-    :_httpsEnable(true){
-		_strHost = host;
-	}
-
-	HTTPClient::~HTTPClient(){
-		
-	}
-
-	void HTTPClient::sendMsg(HTTPMsg* pMsg, bool useHTTPS){
-        std::stringstream ss;
-		const char* routeparam = pMsg->getBuff().c_str();
-        if ( useHTTPS && _httpsEnable ){
-            ss << "https://" << _strHost.c_str() << routeparam;
+		std::stringstream ss;
+        if ( _useHTTPS && _pClient->isHTTPSEnabled() ){
+            ss << "https://" << _pClient->getHost() << _buff.c_str();
         }else{
-            ss << "http://" << _strHost.c_str() << routeparam;
+            ss << "http://" << _pClient->getHost() << _buff.c_str();
         }
         NSString* urlString=[[NSString alloc] initWithUTF8String:ss.str().c_str()];
         NSURL* url=[[NSURL alloc] initWithString:[urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         NSURLRequest *theRequest=[NSURLRequest requestWithURL:url
                                                   cachePolicy:NSURLRequestUseProtocolCachePolicy
                                               timeoutInterval:60.0];
-        // create the connection with the request
-        // and start loading the data
-        HTTPCallback* pCallback = [[HTTPCallback alloc] initWithMsg:pMsg];
-        NSURLConnection *theConnection=[[NSURLConnection alloc] initWithRequest:theRequest delegate:pCallback];
-        if (!theConnection) {
-            pMsg->onRespond(LWHTTPERR_CONNECTION);
-            delete pMsg;
-        }
         [urlString release];
         [url release];
+        HTTPDelegate* pCallback = [[HTTPDelegate alloc] initWithMsg:this];
+        NSURLConnection *theConnection=[[NSURLConnection alloc] initWithRequest:theRequest delegate:pCallback];
+        if (!theConnection) {
+            onRespond(LWHTTPERR_CONNECTION);
+            delete this;
+        }
+	}
+    
+    void HTTPMsg::addParam(const char* param){
+        _buff.append(param);
+    }
+    
+    HTTPClient::HTTPClient(const char* host, bool enableHTTPS)
+    :_httpsEnable(enableHTTPS){
+		_strHost = host;
+	}
+
+	HTTPClient::~HTTPClient(){
+		
 	}
 	
 } //namespace lw
 
-@implementation HTTPCallback
+@implementation HTTPDelegate
 - (id)initWithMsg:(lw::HTTPMsg*)p
 {
     if ( self =[super init] ){
         pMsg=p;
-        pMsg->_pObjCCallback=self;
+        pMsg->_pDelegate=self;
+        dead = false;
     }
     return self;
 }
@@ -89,8 +85,14 @@ namespace lw{
     [super dealloc];
 }
 
+-(void)die{
+    dead = true;
+}
+
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
+    if ( dead )
+        return;
     pMsg->getBuff().clear();
     if ( lw::_pHTTPOKCallback ){
         lw::_pHTTPOKCallback();
@@ -99,17 +101,27 @@ namespace lw{
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
+    if ( dead )
+        return;
     pMsg->getBuff().append((char*)([data bytes]), [data length]);
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
+    if ( dead ){
+        [connection release];
+        return;
+    }
     pMsg->onRespond(LWHTTPERR_NONE);
     delete pMsg;
     [connection release];
 }
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
+    if ( dead ){
+        [connection release];
+        return;
+    }
     lwerror("http error:" << [[error localizedDescription]UTF8String] << " from: " << pMsg->getBuff().c_str());
     if ( lw::_pHTTPErrorCallback ){
         lw::_pHTTPErrorCallback();

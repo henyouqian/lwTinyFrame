@@ -15,14 +15,13 @@ namespace lw{
         void addParam(const char* param);
 		void send();
 		virtual void onRespond(int error){}
-        virtual void onError(){}
 		HTTPClient* getClient(){
 			return _pClient;
 		}
         std::string& getBuff(){
             return _buff;
         }
-        void* _pObjCCallback;
+        void* _pDelegate;
 
 	protected:
 		std::string _buff;
@@ -34,11 +33,13 @@ namespace lw{
 
 	class HTTPClient{
 	public:
-        HTTPClient(const char* host);
+        HTTPClient(const char* host, bool enableHTTPS = true);
 		~HTTPClient();
-		void sendMsg(HTTPMsg* pMsg, bool useHTTPS);
-        void enableHTTPS(bool b){
-            _httpsEnable = b;
+        bool isHTTPSEnabled(){
+            return _httpsEnable;
+        }
+        const char* getHost(){
+            return _strHost.c_str();
         }
 
 	private:
